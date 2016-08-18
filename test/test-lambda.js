@@ -1,6 +1,6 @@
 import { define, it } from 'mocha';
 import { assert } from 'chai';
-import { tokenize, group, parse } from '../lib/lambda';
+import { tokenize, group, parse } from '../lib/parser';
 
 describe('Testing parser', () => {
     const isError = (err) => {
