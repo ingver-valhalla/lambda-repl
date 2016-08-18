@@ -2,7 +2,7 @@ import { define, it } from 'mocha';
 import { assert } from 'chai';
 import { tokenize, group, parse } from '../lib/lambda';
 
-describe('Testing lambda interpreter', () => {
+describe('Testing parser', () => {
     const isError = (err) => {
         return err !== undefined
             && err.hasOwnProperty('err')
@@ -20,6 +20,7 @@ describe('Testing lambda interpreter', () => {
             tokTest('(\\x.t.t x)',
                     ['(', '\\', 'x', '.', 't', '.', 't', 'x', ')']);
             tokTest('λ', ['\\']);
+            tokTest('let x = t', ['let', 'x', '=', 't']);
         });
     });
 
@@ -67,8 +68,8 @@ describe('Testing lambda interpreter', () => {
             assert.deepEqual(ret, expected);
         };
         const errorTest = (expr) => {
-            const ret = parse(tokenize(expr));
-            console.log(ret);
+            const tokens = tokenize(expr);
+            const ret = parse(tokens);
             assert.ok(isError(ret));
         };
 
@@ -104,10 +105,22 @@ describe('Testing lambda interpreter', () => {
             parseTest('(\\f. f (\\x.x x) (\\x.x x)) g', exp);
         });
 
+        it('should handle `let\' forms', () => {
+            const exp1 = ['let', 'id', ['\\', 'x', ['x']]],
+                  exp2 = ['let', 'f', [['\\', 'x', ['\\', 'y', ['y', 'x']]], 'z']];
+            parseTest('let id = \\x.x', exp1);
+            parseTest('let f = (\\x.\\y. y x) z', exp2);
+        });
+
         it('should handle errors', () => {
             errorTest('\\');
-            errorTest('\\x (');
             errorTest('x \\');
+            errorTest('\\\\');
+            errorTest('let x');
+            errorTest('let x =');
+            errorTest('let x = \\');
+            errorTest('\\ x. let x = e');
+            errorTest('(let x = asd)');
         });
     });
 });
