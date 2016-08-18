@@ -1,0 +1,18 @@
+{
+  "name": "lambda-repl",
+  "version": "0.0.0",
+  "description": "REPL for lambda calculus",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha --compilers js:babel-core/register"
+  },
+  "author": "ingver",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.13.2",
+    "babel-preset-es2015": "^6.13.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
+  }
+}
