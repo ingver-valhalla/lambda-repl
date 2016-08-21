@@ -1,14 +1,9 @@
 import { define, it } from 'mocha';
 import { assert } from 'chai';
 import { tokenize, group, parse } from '../lib/parser';
+import { SyntaxError } from '../lib/errors';
 
 describe('Testing parser', () => {
-    const isError = (err) => {
-        return err !== undefined
-            && err.hasOwnProperty('err')
-            && err.hasOwnProperty('msg');
-    }
-
     describe('#tokenize', () => {
         const tokTest = (expr, expected) => {
             const ret = tokenize(expr);
@@ -51,14 +46,14 @@ describe('Testing parser', () => {
         it('should return error if parenthesis group nothing', () => {
             const expr = '(())';
             const ret = group(tokenize(expr));
-            assert.ok(isError(ret));
+            assert.ok(ret instanceof SyntaxError);
         });
 
         it('should signal about missing parens', () => {
             const err1 = '(\\x.x', ret1 = group(tokenize(err1)),
                   err2 = '\\x.x)', ret2 = group(tokenize(err2));
-            assert.ok(isError(ret1));
-            assert.ok(isError(ret2));
+            assert.ok(ret1 instanceof SyntaxError);
+            assert.ok(ret2 instanceof SyntaxError);
         });
     });
 
@@ -70,7 +65,7 @@ describe('Testing parser', () => {
         const errorTest = (expr) => {
             const tokens = tokenize(expr);
             const ret = parse(tokens);
-            assert.ok(isError(ret));
+            assert.ok(ret instanceof SyntaxError);
         };
 
         it('should return atom unchanged', () => {
