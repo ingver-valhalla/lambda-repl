@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "start": "babel-node index.js",
     "test": "node_modules/.bin/mocha --compilers js:babel-core/register"
   },
   "author": "ingver",
