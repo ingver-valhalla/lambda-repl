@@ -38,5 +38,29 @@ describe('Testing eval', () => {
             assert.deepEqual(result, expected);
         });
 
+        it('test 3', () => {
+            globalEnv.set('0', read('\\s.\\z.z'));
+            globalEnv.set('succ', read('\\n.\\s.\\z.s(n s z)'));
+
+            const one = 'succ 0',
+                  one_res = substitute(read(one), globalEnv),
+                  one_exp = read('\\s.\\z.s z');
+            const two = 'succ (succ 0)',
+                  two_res = substitute(read(two), globalEnv),
+                  two_exp = read('\\s.\\z.s (s z)');
+
+            assert.deepEqual(one_res, one_exp);
+            assert.deepEqual(two_res, two_exp);
+        });
+
+        it('test 4', () => {
+            globalEnv.set('1', read('\\s.\\z.s z'));
+            globalEnv.set('2', read('\\s.\\z.s (s z)'));
+
+            const one = '1 succ';
+            const one_result = substitute(read(one), globalEnv);
+            const one_expected = read("\\z.\\s.\\z'.s(z s z')");
+            assert.deepEqual(one_result, one_expected);
+        });
     });
 });

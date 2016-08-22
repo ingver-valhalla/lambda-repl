@@ -25,7 +25,7 @@ rl.on('line', (input) => {
                 console.log('RuntimeError:', result.msg);
             }
             else {
-                console.log('=>', print(result));
+                console.log('=>', result);
             }
             //console.log('=> globalEnv', print(globalEnv));
         }
