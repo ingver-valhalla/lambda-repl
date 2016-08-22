@@ -1,34 +1,42 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { parse, tokenize } from '../lib/parser';
-import { substitute, evalAst } from '../lib/eval';
+import { tokenize, parse } from '../lib/parser';
+import Env from '../lib/env';
+import { substitute } from '../lib/eval';
+import { print } from '../lib/utils';
 
-describe('Tesing eval', () => {
-    const read = (str) => {
-        return parse(tokenize(str));
-    };
+describe('Testing eval', () => {
+    const read = (str) => parse(tokenize(str));
 
     describe('#substitute', () => {
-        let globalEnv = {};
-        it('should return lambda unchanged', () => {
-            const expr = '\\x.x';
-            const ast = read(expr);
-            const result = substitute(ast, globalEnv);
-
-            assert.deepEqual(ast, result);
-        });
-
-        it('should substitute free variables', () => {
-            const x = '\\x.\\y.x';
-            const y = '\\x.\\y.y';
-            globalEnv.x = read(x);
-            globalEnv.y = read(y);
-            const expr = 'y (\\z.x (\\x.x y) z) y';
+        let globalEnv = new Env();
+        it('test 0', () => {
+            const expr = '\\y.y y y';
             const result = substitute(read(expr), globalEnv);
-            const expected =
-                read('(' + y + ')(\\z.(' + x + ')(\\x.x(' + y + ')) z)(' + y + ')');
+            const expected = read(expr);
 
             assert.deepEqual(result, expected);
         });
+        it('test 1', () => {
+            globalEnv.set('id', read('\\x.x'));
+            globalEnv.set('left', read('\\x.\\y.x'));
+
+            const expr = 'left id';
+            const result = substitute(read(expr), globalEnv);
+            const expected = read('\\y.\\x.x');
+
+            assert.deepEqual(result, expected);
+        });
+
+        it('test 2', () => {
+            globalEnv.set('doubley', read('\\x.\\y.y y x'));
+
+            const expr = 'doubley id';
+            const result = substitute(read(expr), globalEnv);
+            const expected = read('\\y. y y (\\x.x)');
+
+            assert.deepEqual(result, expected);
+        });
+
     });
 });

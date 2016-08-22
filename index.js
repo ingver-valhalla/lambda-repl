@@ -2,6 +2,8 @@ import { tokenize, parse } from './lib/parser';
 import { evalAst } from './lib/eval';
 import readline from 'readline';
 import { print } from './lib/utils'
+import { SyntaxError, RuntimeError } from './lib/errors';
+import Env from './lib/env'
 
 
 const rl = readline.createInterface( {
@@ -10,13 +12,27 @@ const rl = readline.createInterface( {
     prompt: ' λ > '
 } );
 
-let globalEnv = {};
+let globalEnv = new Env();
 
 rl.on('line', (input) => {
     if (input !== '') {
-        const result = evalAst(parse(tokenize(input)), globalEnv);
-        console.log('=>', print(result));
-        console.log('=> globalEnv', print(globalEnv));
+        try {
+            const result = evalAst(parse(tokenize(input)), globalEnv);
+            if (result instanceof SyntaxError) {
+                console.log('SyntaxError:', result.msg);
+            }
+            else if (result instanceof RuntimeError) {
+                console.log('RuntimeError:', result.msg);
+            }
+            else {
+                console.log('=>', print(result));
+            }
+            //console.log('=> globalEnv', print(globalEnv));
+        }
+        catch (e) {
+            console.log(e.name + ":" + e.msg);
+            console.log(e.stack);
+        }
     }
     console.log();
     rl.prompt();
