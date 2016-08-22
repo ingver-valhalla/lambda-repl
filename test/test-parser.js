@@ -1,4 +1,4 @@
-import { define, it } from 'mocha';
+import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { tokenize, group, parse } from '../lib/parser';
 import { SyntaxError } from '../lib/errors';
