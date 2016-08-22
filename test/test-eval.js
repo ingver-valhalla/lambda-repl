@@ -47,7 +47,7 @@ describe('Testing eval', () => {
                   one_exp = read('\\s.\\z.s z');
             const two = 'succ (succ 0)',
                   two_res = substitute(read(two), globalEnv),
-                  two_exp = read('\\s.\\z.s (s z)');
+                  two_exp = read("\\s'.\\z'.s' (s' z')");
 
             assert.deepEqual(one_res, one_exp);
             assert.deepEqual(two_res, two_exp);
@@ -59,8 +59,13 @@ describe('Testing eval', () => {
 
             const one = '1 succ';
             const one_result = substitute(read(one), globalEnv);
-            const one_expected = read("\\z.\\s.\\z'.s(z s z')");
+            const one_expected = read("\\z.\\s'.\\z'.s'(z s' z')");
             assert.deepEqual(one_result, one_expected);
+
+            const two = '2 succ';
+            const two_result = substitute(read(two), globalEnv);
+            const two_expected = read("\\z.\\s'.\\z'.s' (s' (z s' z'))");
+            assert.deepEqual(two_result, two_expected);
         });
     });
 });
