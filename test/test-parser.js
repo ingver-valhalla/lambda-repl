@@ -16,6 +16,8 @@ describe('Testing parser', () => {
                     ['(', '\\', 'x', '.', 't', '.', 't', 'x', ')']);
             tokTest('λ', ['\\']);
             tokTest('let x = t', ['let', 'x', '=', 't']);
+            tokTest('\\x.1', ['\\', 'x', '.', '1']);
+            tokTest('\\z.a123', ['\\', 'z', '.', 'a123']);
         });
     });
 
@@ -70,6 +72,7 @@ describe('Testing parser', () => {
 
         it('should return atom unchanged', () => {
             parseTest('x', ['x']);
+            parseTest('42', 42);
         });
 
         it('should return lambda-object for lambda-abstraction', () => {
@@ -116,6 +119,7 @@ describe('Testing parser', () => {
             errorTest('let x = \\');
             errorTest('\\ x. let x = e');
             errorTest('(let x = asd)');
+            errorTest('let 42 = asd');
         });
     });
 });

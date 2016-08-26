@@ -3,7 +3,6 @@ import { assert } from 'chai';
 import { tokenize, parse } from '../lib/parser';
 import Env from '../lib/env';
 import { substitute } from '../lib/eval';
-import { print } from '../lib/utils';
 
 describe('Testing eval', () => {
     const read = (str) => parse(tokenize(str));
@@ -39,13 +38,13 @@ describe('Testing eval', () => {
         });
 
         it('test 3', () => {
-            globalEnv.set('0', read('\\s.\\z.z'));
+            globalEnv.set('zero', read('\\s.\\z.z'));
             globalEnv.set('succ', read('\\n.\\s.\\z.s(n s z)'));
 
-            const one = 'succ 0',
+            const one = 'succ zero',
                   one_res = substitute(read(one), globalEnv),
                   one_exp = read('\\s.\\z.s z');
-            const two = 'succ (succ 0)',
+            const two = 'succ (succ zero)',
                   two_res = substitute(read(two), globalEnv),
                   two_exp = read("\\s'.\\z'.s' (s' z')");
 
@@ -54,15 +53,15 @@ describe('Testing eval', () => {
         });
 
         it('test 4', () => {
-            globalEnv.set('1', read('\\s.\\z.s z'));
-            globalEnv.set('2', read('\\s.\\z.s (s z)'));
+            globalEnv.set('one', read('\\s.\\z.s z'));
+            globalEnv.set('two', read('\\s.\\z.s (s z)'));
 
-            const one = '1 succ';
+            const one = 'one succ';
             const one_result = substitute(read(one), globalEnv);
             const one_expected = read("\\z.\\s'.\\z'.s'(z s' z')");
             assert.deepEqual(one_result, one_expected);
 
-            const two = '2 succ';
+            const two = 'two succ';
             const two_result = substitute(read(two), globalEnv);
             const two_expected = read("\\z.\\s'.\\z'.s' (s' (z s' z'))");
             assert.deepEqual(two_result, two_expected);
