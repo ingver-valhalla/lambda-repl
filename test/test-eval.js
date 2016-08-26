@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { tokenize, parse } from '../lib/parser';
 import Env from '../lib/env';
-import { substitute } from '../lib/eval';
+import { substitute, evalAst } from '../lib/eval';
 
 describe('Testing eval', () => {
     const read = (str) => parse(tokenize(str));
@@ -65,6 +65,21 @@ describe('Testing eval', () => {
             const two_result = substitute(read(two), globalEnv);
             const two_expected = read("\\z.\\s'.\\z'.s' (s' (z s' z'))");
             assert.deepEqual(two_result, two_expected);
+        });
+    });
+    describe('#evalAst', () => {
+        let globalEnv = new Env();
+        it('test 0', () => {
+            evalAst(read('let applyToTwo = \\f.\\x.\\y.f x y'), globalEnv);
+            evalAst(read('let sumOfTwo = applyToTwo +'), globalEnv);
+            const five = evalAst(read('sumOfTwo 2 3'), globalEnv);
+
+            assert.equal(five, 5);
+        });
+        it('test 1', () => {
+            let env = new Env();
+            const one = evalAst(read('(\\s.\\z.s z) 1+ 0'), env);
+            assert.equal(one, 1);
         });
     });
 });

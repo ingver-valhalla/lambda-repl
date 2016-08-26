@@ -1,9 +1,8 @@
 import { tokenize, parse } from './lib/parser';
 import { evalAst } from './lib/eval';
 import readline from 'readline';
-import { print } from './lib/utils'
 import { SyntaxError, RuntimeError } from './lib/errors';
-import Env from './lib/env'
+import Env from './lib/env';
 
 
 const rl = readline.createInterface( {
@@ -27,7 +26,6 @@ rl.on('line', (input) => {
             else {
                 console.log('=>', result);
             }
-            //console.log('=> globalEnv', print(globalEnv));
         }
         catch (e) {
             console.log(e.name + ":" + e.msg);

@@ -72,7 +72,7 @@ describe('Testing parser', () => {
 
         it('should return atom unchanged', () => {
             parseTest('x', ['x']);
-            parseTest('42', 42);
+            parseTest('42', [42]);
         });
 
         it('should return lambda-object for lambda-abstraction', () => {
