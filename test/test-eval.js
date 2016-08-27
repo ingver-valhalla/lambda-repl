@@ -22,7 +22,7 @@ describe('Testing eval', () => {
 
             const expr = 'left id';
             const result = substitute(read(expr), globalEnv);
-            const expected = read('\\y.\\x.x');
+            const expected = read("\\y.\\x'.x'");
 
             assert.deepEqual(result, expected);
         });
@@ -32,7 +32,7 @@ describe('Testing eval', () => {
 
             const expr = 'doubley id';
             const result = substitute(read(expr), globalEnv);
-            const expected = read('\\y. y y (\\x.x)');
+            const expected = read("\\y. y y (\\x'.x')");
 
             assert.deepEqual(result, expected);
         });
@@ -46,7 +46,7 @@ describe('Testing eval', () => {
                   one_exp = read('\\s.\\z.s z');
             const two = 'succ (succ zero)',
                   two_res = substitute(read(two), globalEnv),
-                  two_exp = read("\\s'.\\z'.s' (s' z')");
+                  two_exp = read("\\s.\\z.s (s z)");
 
             assert.deepEqual(one_res, one_exp);
             assert.deepEqual(two_res, two_exp);
