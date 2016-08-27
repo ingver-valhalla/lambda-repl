@@ -76,10 +76,20 @@ describe('Testing eval', () => {
 
             assert.equal(five, 5);
         });
+
         it('test 1', () => {
             let env = new Env();
             const one = evalAst(read('(\\s.\\z.s z) 1+ 0'), env);
             assert.equal(one, 1);
+        });
+
+        it('test 2', () => {
+            evalAst(read('let pred = \\n.\\f.\\x.n (\\g.\\h.h (g f)) (\\u.x) (\\u.u)'), globalEnv);
+            evalAst(read('let two = \\s.\\z.s (s z)'), globalEnv);
+            evalAst(read('let four = \\s.\\z.s (s (s (s z)))'), globalEnv);
+
+            const two = evalAst(read('two pred four 1+ 0'), globalEnv);
+            assert.equal(two, 2);
         });
     });
 });
