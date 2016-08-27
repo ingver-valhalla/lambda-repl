@@ -18,10 +18,10 @@ rl.on('line', (input) => {
         try {
             const result = evalAst(parse(tokenize(input)), globalEnv);
             if (result instanceof SyntaxError) {
-                console.log('SyntaxError:', result.msg);
+                console.log('*** SyntaxError:', result.msg);
             }
             else if (result instanceof RuntimeError) {
-                console.log('RuntimeError:', result.msg);
+                console.log('*** RuntimeError:', result.msg);
             }
             else {
                 console.log('=>', result);
